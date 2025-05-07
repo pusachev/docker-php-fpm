@@ -1,0 +1,53 @@
+# Docker related
+.docker/
+docker-compose.override.yml
+
+# Environment variables
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# PHP Storm IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+
+# Build directories
+dist/
+build/
+
+# Cache
+.cache/
+
+# Local test data
+test/local/
+
+# Backup files
+*.bak
+*.backup
+*~
