@@ -71,8 +71,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash && \
     apt install symfony-cli -y
 
-RUN mkdir -p /run/php && \
-    sed -i 's/www-data/root/g' /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
+RUN mkdir -p /run/php
 
 EXPOSE 9000 9003
 
