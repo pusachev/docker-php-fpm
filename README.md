@@ -31,15 +31,15 @@ version: '3.8'
 
 services:
   php-fpm:
-    image: yourusername/php-fpm:latest
+    image: pusachev/php-fpm:latest
     ports:
       - "9000:9000"
-      - "9003:9003"
     volumes:
       - ./:/var/www/html
       - ./conf/php/xdebug.ini:/etc/php/8.4/mods-available/xdebug.ini
     environment:
       PHP_IDE_CONFIG: "serverName=docker"
+      XDEBUG_ENABLED: "1"  # Enable Xdebug (set to 0 to disable)
     extra_hosts:
       - "host.docker.internal:host-gateway"
 ```
