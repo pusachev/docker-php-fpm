@@ -86,6 +86,17 @@ RUN mkdir -p $NVM_DIR && \
 
 ENV PATH=$NVM_DIR/versions/node/v${NODE_VERSION}/bin:$PATH
 
+RUN echo '#!/bin/bash\n\
+if [ "$XDEBUG_ENABLED" = "1" ] || [ "$XDEBUG_ENABLED" = "true" ] || [ "$XDEBUG_ENABLED" = "yes" ]; then\n\
+  echo "Enabling Xdebug..."\n\
+  phpenmod -v ${PHP_VERSION} xdebug\n\
+else\n\
+  echo "Xdebug is disabled. Set XDEBUG_ENABLED=1 to enable."\n\
+  phpdismod -v ${PHP_VERSION} xdebug\n\
+fi\n\
+\n\
+php-fpm${PHP_VERSION} -F\n' > /usr/local/bin/docker-php-entrypoint.sh \
+    && chmod +x /usr/local/bin/docker-php-entrypoint.sh
 
 RUN mkdir -p /run/php
 
@@ -93,4 +104,4 @@ EXPOSE 9000 9003
 
 WORKDIR ${WORKING_DIR}
 
-CMD ["sh", "-c", "php-fpm${PHP_VERSION} -F"]
+CMD ["/usr/local/bin/docker-php-entrypoint.sh"]
