@@ -98,6 +98,31 @@ You can override this configuration by mounting your own file: `xdebug.ini`
 volumes:
   - ./my-xdebug.ini:/etc/php/8.4/mods-available/xdebug.ini
 ```
+# Using the Build Script
+The repository includes a convenient `build.sh` script that automates the process of rebuilding and pushing the PHP-FPM Docker image. This script performs the following actions:
+
+1. Reads the PHP version from the `.env` file
+2. Stops any running containers that use the image `{vendor}/php-fpm:{php-version}`
+3. Removes the existing image locally
+4. Rebuilds the image from the Dockerfile
+5. Pushes the newly built image to Docker Hub
+
+To use the script:
+
+1. Make the script executable (first time only)
+
+```bash
+chmod +x build.sh
+```
+2. Run the script
+
+```bash
+./build.sh
+```
+Note: This script assumes you are already authenticated with Docker Hub. If not, run `docker login` before running the script.
+
+
+
 ## Available PHP Extensions
 The image comes with the following PHP extensions pre-installed:
 - fpm, cli, common

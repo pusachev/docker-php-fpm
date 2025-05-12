@@ -8,8 +8,10 @@ ARG PHP_UPLOAD_MAX_FILESIZE=100M
 ARG PHP_POST_MAX_SIZE=100M
 ARG PHP_MAX_EXECUTION_TIME=300
 ARG WORKING_DIR=/var/www/html
+ARG NODE_VERSION=22
 
 ENV PHP_VERSION=${PHP_VERSION}
+ENV NODE_VERSION=${NODE_VERSION}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -18,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     wget \
     gnupg2 \
+    nano \
     lsb-release \
     ca-certificates \
     apt-transport-https
@@ -66,10 +69,23 @@ RUN sed -i "s/memory_limit = .*/memory_limit = ${PHP_MEMORY_LIMIT}/" /etc/php/${
     && sed -i "s/post_max_size = .*/post_max_size = ${PHP_POST_MAX_SIZE}/" /etc/php/${PHP_VERSION}/fpm/php.ini \
     && sed -i "s/max_execution_time = .*/max_execution_time = ${PHP_MAX_EXECUTION_TIME}/" /etc/php/${PHP_VERSION}/fpm/php.ini
 
+RUN sed -i 's|listen = /run/php/php.*-fpm.sock|listen = 0.0.0.0:9000|' /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash && \
     apt install symfony-cli -y
+
+ENV NVM_DIR=/root/.nvm
+RUN mkdir -p $NVM_DIR && \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
+    . $NVM_DIR/nvm.sh && \
+    nvm install ${NODE_VERSION} && \
+    nvm alias default ${NODE_VERSION} && \
+    nvm use default
+
+ENV PATH=$NVM_DIR/versions/node/v${NODE_VERSION}/bin:$PATH
+
 
 RUN mkdir -p /run/php
 
